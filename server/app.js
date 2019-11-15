@@ -5,9 +5,6 @@ const router = new Router();
 const axios = require('axios');
 const cors = require('@koa/cors');
  
-app.use(cors());
-app.use(router.routes());
-app.use(router.allowedMethods());
 
 
 
@@ -19,46 +16,36 @@ router.get('/coin',  async ctx => {
         headers:{'X-CMC_PRO_API_KEY':'1d02886e-3d7b-454b-8aee-bbb2cd02992a'}
     })
     .then(arr=>{
-        arr=arr.data.data;
+        arr= arr.data.data;
       
         for(let i=0;i<arr.length;i++){
 
             if(arr[i].symbol==item){
 
-                console.log(arr[i]);
-
-              ctx.status=200;
-              ctx.body={
+              ctx.body= {
                     status:'success',
                     id:arr[i].id,
                     symbol:arr[i].symbol
                 };
-               ctx.end();
-                
-            }
 
-
-             
-            
+              return ctx.status=200;
+  
+            }      
         }
 
-        ctx.status=404;
-        ctx.body={
-              status:'error'
-          };
-         ctx.end();
+              
+                 ctx.body={
+                      status:'error'
+                };
 
-
-    })
-    .catch(err=>{
-        ctx.status=404;
-        ctx.body={
-              status:'error'
-          };
-         ctx.end();
+                return ctx.status=404;
     })
 });
 
+
+app.use(cors());
+app.use(router.allowedMethods());
+app.use(router.routes());
 
 
 
